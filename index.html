@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resistance Jam: Rock The Halls</title>
     
-    <!-- PayPal SDK (Part 1 of your code) -->
-    <script src="https://www.paypal.com/sdk/js?client-id=BAAyt96i02Y3HzSMloDfZjzGb99_ggnSz_Sh-QjHQoS5GRjFw-O-mVB9m4Av_IQvKh7_0jysuZs4_YOLVM&components=hosted-buttons&enable-funding=venmo&currency=USD"></script>
-    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -47,11 +44,15 @@
     </script>
 
     <style>
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px; /* Offset for fixed header so it doesn't cover titles */
+        }
+
         body {
             background-color: #050505;
             color: #e5e5e5;
             overflow-x: hidden;
-            scroll-behavior: smooth;
         }
 
         /* Snowflake Animation */
@@ -106,11 +107,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-
-        /* Payment Modal Styles */
-        #payment-modal {
-            backdrop-filter: blur(8px);
-        }
     </style>
 </head>
 <body class="relative font-sans antialiased selection:bg-xmas-red selection:text-white">
@@ -124,7 +120,7 @@
             <div class="text-2xl font-metal text-xmas-red tracking-widest drop-shadow-md">RESISTANCE JAM</div>
             <div class="flex items-center gap-6">
                 <a href="#details" class="text-sm font-bold hover:text-xmas-green transition-colors uppercase tracking-wider hidden md:block">The Resistance</a>
-                <a href="#tickets" class="bg-xmas-green hover:bg-green-600 text-white font-bold py-2 px-6 rounded shadow-[0_0_15px_rgba(0,135,62,0.6)] hover:shadow-[0_0_25px_rgba(0,135,62,0.8)] transition-all transform hover:-translate-y-1">
+                <a href="#tickets" id="nav-tickets" class="bg-xmas-green hover:bg-green-600 text-white font-bold py-2 px-6 rounded shadow-[0_0_15px_rgba(0,135,62,0.6)] hover:shadow-[0_0_25px_rgba(0,135,62,0.8)] transition-all transform hover:-translate-y-1">
                     GET TICKETS
                 </a>
             </div>
@@ -136,7 +132,7 @@
         <!-- Overlay -->
         <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-[#050505]"></div>
         
-        <div class="text-center z-10 px-4 relative mt-16">
+        <div class="text-center z-10 px-4 relative mt-24 mb-12">
             <h2 class="text-xl md:text-3xl text-xmas-green font-bold tracking-[0.3em] mb-4 uppercase animate-pulse-slow">Battle of the Bands</h2>
             <h1 class="text-6xl md:text-8xl lg:text-9xl font-metal text-white mb-6 text-shadow-lg leading-tight transform hover:scale-105 transition-transform duration-500 cursor-default">
                 ROCK THE <span class="text-xmas-red inline-block relative">
@@ -145,17 +141,61 @@
             </h1>
             <p class="text-xl md:text-2xl font-light mb-10 italic text-gray-300">"Where the silent night meets the sonic resistance."</p>
             
-            <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
-                <div class="glass-panel px-8 py-4 rounded text-gold font-bold text-lg border-l-4 border-xmas-red">
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center mb-12">
+                <!-- Date Button (Now Interactive) -->
+                <button onclick="addToCalendar()" class="glass-panel px-8 py-4 rounded text-gold font-bold text-lg border-l-4 border-xmas-red hover:bg-red-900/30 hover:border-red-400 transition-all transform hover:scale-105" title="Add to Calendar">
                     <i class="fas fa-calendar-alt mr-3"></i> DEC 12, 2025
-                </div>
-                <div class="glass-panel px-8 py-4 rounded text-gold font-bold text-lg border-r-4 border-xmas-green">
-                    <i class="fas fa-map-marker-alt mr-3"></i> TULSA, OK
-                </div>
+                </button>
+                
+                <!-- Updated Location Button with Google Maps Link & Name -->
+                <a href="https://www.google.com/maps/place/Boman+Twin+Event+Center/@36.1210479,-95.9038706,17z/data=!3m1!4b1!4m6!3m5!1s0x87b6ed5c368d8a99:0xdf93c1482b39a08!8m2!3d36.1210479!4d-95.9038706!16s%2Fg%2F11tf39mq5f?entry=ttu&g_ep=EgoyMDI1MTEyMy4xIKXMDSoASAFQAw%3D%3D" target="_blank" class="glass-panel px-8 py-4 rounded text-gold font-bold text-lg border-r-4 border-xmas-green hover:bg-green-900/30 hover:border-green-400 transition-all transform hover:scale-105">
+                    <i class="fas fa-map-marker-alt mr-3"></i> The Boman Twin
+                </a>
             </div>
 
-            <!-- Countdown Timer Placeholder -->
-            <div id="countdown" class="mt-8 font-metal text-2xl text-gray-400"></div>
+            <!-- Enhanced Countdown Timer Box -->
+            <div id="countdown-box" class="p-1 bg-gradient-to-r from-xmas-red via-gold to-xmas-green rounded-xl max-w-3xl mx-auto shadow-[0_0_30px_rgba(214,0,28,0.3)] transform hover:scale-105 transition-transform duration-500">
+                <div class="bg-black/90 rounded-lg p-6 md:p-8 backdrop-blur-sm">
+                    <h3 class="text-gold font-metal text-2xl md:text-3xl mb-6 tracking-wider uppercase text-shadow-lg">Presale Deadline Approaches</h3>
+                    
+                    <div id="countdown-timer" class="flex flex-wrap justify-center gap-4 md:gap-8">
+                        <!-- Days -->
+                        <div class="flex flex-col items-center">
+                            <span id="timer-days" class="text-4xl md:text-6xl font-metal text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">00</span>
+                            <span class="text-xs md:text-sm text-gray-400 uppercase tracking-widest mt-1">Days</span>
+                        </div>
+                        
+                        <div class="text-2xl md:text-4xl font-metal text-gray-600 self-start mt-2">:</div>
+                        
+                        <!-- Hours -->
+                        <div class="flex flex-col items-center">
+                            <span id="timer-hours" class="text-4xl md:text-6xl font-metal text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">00</span>
+                            <span class="text-xs md:text-sm text-gray-400 uppercase tracking-widest mt-1">Hours</span>
+                        </div>
+                        
+                        <div class="text-2xl md:text-4xl font-metal text-gray-600 self-start mt-2">:</div>
+
+                        <!-- Minutes -->
+                        <div class="flex flex-col items-center">
+                            <span id="timer-minutes" class="text-4xl md:text-6xl font-metal text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">00</span>
+                            <span class="text-xs md:text-sm text-gray-400 uppercase tracking-widest mt-1">Mins</span>
+                        </div>
+                        
+                        <div class="text-2xl md:text-4xl font-metal text-gray-600 self-start mt-2">:</div>
+
+                        <!-- Seconds -->
+                        <div class="flex flex-col items-center">
+                            <span id="timer-seconds" class="text-4xl md:text-6xl font-metal text-xmas-red drop-shadow-[0_0_15px_rgba(214,0,28,0.8)] animate-pulse">00</span>
+                            <span class="text-xs md:text-sm text-xmas-red uppercase tracking-widest mt-1">Secs</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Expired Message (Hidden by default) -->
+                    <div id="timer-message" class="hidden">
+                        <span class="text-4xl md:text-6xl font-metal text-xmas-red tracking-widest drop-shadow-[0_0_15px_rgba(214,0,28,0.8)]">PRESALES ENDED</span>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- Animated Gradient Border at bottom -->
@@ -225,6 +265,69 @@
                 </div>
             </div>
 
+            <!-- Featured Bands Section -->
+            <div class="mb-24 scroll-reveal reveal-hidden">
+                <h3 class="text-4xl font-metal text-center mb-12 text-white">Featured <span class="text-gray-500">Lineup</span></h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Society Of Cremation -->
+                    <div class="glass-panel p-6 rounded-xl text-center hover:bg-white/5 transition-all group border-b-2 border-transparent hover:border-xmas-red">
+                        <h4 class="text-2xl font-bold text-white mb-4 group-hover:text-xmas-red transition-colors font-metal tracking-wide">Society Of Cremation</h4>
+                        <a href="https://www.instagram.com/s_o_c.band?igsh=cDl3ZmQ0ZGc2Z2lv" target="_blank" class="inline-flex items-center justify-center bg-gray-900 border border-gray-700 hover:border-xmas-red text-gray-300 hover:text-white px-6 py-2 rounded-lg transition-all w-full group-hover:shadow-[0_0_15px_rgba(214,0,28,0.3)]">
+                            <i class="fab fa-instagram mr-2 text-xl"></i> View Profile
+                        </a>
+                    </div>
+
+                    <!-- Holy Practitioner -->
+                    <div class="glass-panel p-6 rounded-xl text-center hover:bg-white/5 transition-all group border-b-2 border-transparent hover:border-xmas-green">
+                        <h4 class="text-2xl font-bold text-white mb-4 group-hover:text-xmas-green transition-colors font-metal tracking-wide">Holy Practitioner</h4>
+                        <a href="https://www.instagram.com/musicfromthesummit?igsh=MWE5cDRweHNuOXl1bQ==" target="_blank" class="inline-flex items-center justify-center bg-gray-900 border border-gray-700 hover:border-xmas-green text-gray-300 hover:text-white px-6 py-2 rounded-lg transition-all w-full group-hover:shadow-[0_0_15px_rgba(0,135,62,0.3)]">
+                            <i class="fab fa-instagram mr-2 text-xl"></i> View Profile
+                        </a>
+                    </div>
+
+                    <!-- Blood on the Oilfield -->
+                    <div class="glass-panel p-6 rounded-xl text-center hover:bg-white/5 transition-all group border-b-2 border-transparent hover:border-gold">
+                        <h4 class="text-2xl font-bold text-white mb-4 group-hover:text-gold transition-colors font-metal tracking-wide">Blood on the Oilfield</h4>
+                        <a href="https://www.instagram.com/blood_on_the_oilfield?igsh=M2V2aTdoeTVwN2g4" target="_blank" class="inline-flex items-center justify-center bg-gray-900 border border-gray-700 hover:border-gold text-gray-300 hover:text-white px-6 py-2 rounded-lg transition-all w-full group-hover:shadow-[0_0_15px_rgba(255,215,0,0.3)]">
+                            <i class="fab fa-instagram mr-2 text-xl"></i> View Profile
+                        </a>
+                    </div>
+
+                    <!-- The Cards -->
+                    <div class="glass-panel p-6 rounded-xl text-center hover:bg-white/5 transition-all group border-b-2 border-transparent hover:border-xmas-red">
+                        <h4 class="text-2xl font-bold text-white mb-4 group-hover:text-xmas-red transition-colors font-metal tracking-wide">The Cards</h4>
+                        <a href="https://www.instagram.com/the_cards.mp3?igsh=MWt6Y3RnNDRoOHd5MA==" target="_blank" class="inline-flex items-center justify-center bg-gray-900 border border-gray-700 hover:border-xmas-red text-gray-300 hover:text-white px-6 py-2 rounded-lg transition-all w-full group-hover:shadow-[0_0_15px_rgba(214,0,28,0.3)]">
+                            <i class="fab fa-instagram mr-2 text-xl"></i> View Profile
+                        </a>
+                    </div>
+
+                    <!-- Hanging by a Thread -->
+                    <div class="glass-panel p-6 rounded-xl text-center hover:bg-white/5 transition-all group border-b-2 border-transparent hover:border-xmas-green">
+                        <h4 class="text-2xl font-bold text-white mb-4 group-hover:text-xmas-green transition-colors font-metal tracking-wide">Hanging by a Thread</h4>
+                        <a href="https://www.instagram.com/hanging.by.a.threadoffical?igsh=MXBtZm51cmN5ZGlrdw==" target="_blank" class="inline-flex items-center justify-center bg-gray-900 border border-gray-700 hover:border-xmas-green text-gray-300 hover:text-white px-6 py-2 rounded-lg transition-all w-full group-hover:shadow-[0_0_15px_rgba(0,135,62,0.3)]">
+                            <i class="fab fa-instagram mr-2 text-xl"></i> View Profile
+                        </a>
+                    </div>
+
+                    <!-- SluggNutt -->
+                    <div class="glass-panel p-6 rounded-xl text-center hover:bg-white/5 transition-all group border-b-2 border-transparent hover:border-gold">
+                        <h4 class="text-2xl font-bold text-white mb-4 group-hover:text-gold transition-colors font-metal tracking-wide">SluggNutt</h4>
+                        <a href="https://www.instagram.com/sluggnuttband?igsh=dWExYWtmYTZlNXE5" target="_blank" class="inline-flex items-center justify-center bg-gray-900 border border-gray-700 hover:border-gold text-gray-300 hover:text-white px-6 py-2 rounded-lg transition-all w-full group-hover:shadow-[0_0_15px_rgba(255,215,0,0.3)]">
+                            <i class="fab fa-instagram mr-2 text-xl"></i> View Profile
+                        </a>
+                    </div>
+
+                    <!-- Moon Band (Centered in grid if odd number) -->
+                    <div class="glass-panel p-6 rounded-xl text-center hover:bg-white/5 transition-all group border-b-2 border-transparent hover:border-xmas-red md:col-span-2 lg:col-span-1 lg:col-start-2">
+                        <h4 class="text-2xl font-bold text-white mb-4 group-hover:text-xmas-red transition-colors font-metal tracking-wide">Moon Band</h4>
+                        <a href="https://www.instagram.com/moonbandok?igsh=bzB2dTJydjJ5N3F1" target="_blank" class="inline-flex items-center justify-center bg-gray-900 border border-gray-700 hover:border-xmas-red text-gray-300 hover:text-white px-6 py-2 rounded-lg transition-all w-full group-hover:shadow-[0_0_15px_rgba(214,0,28,0.3)]">
+                            <i class="fab fa-instagram mr-2 text-xl"></i> View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <!-- Features (Dab Bar & Dirty Santa) -->
             <div class="mb-24">
                 <h3 class="text-3xl font-metal text-center mb-12 text-white">Holiday Features</h3>
@@ -237,10 +340,10 @@
                                 <div class="bg-green-900/30 p-4 rounded-full text-xmas-green">
                                     <i class="fas fa-cannabis text-3xl"></i>
                                 </div>
-                                <span class="bg-gray-800 text-xs font-bold px-3 py-1 rounded text-gray-400 uppercase">21+ Area</span>
+                                <span class="bg-gray-800 text-xs font-bold px-3 py-1 rounded text-gray-400 uppercase">18+ w/ Med • 21+</span>
                             </div>
                             <h4 class="text-2xl font-bold mb-3 text-white">Sponsored Dab Bar</h4>
-                            <p class="text-gray-400 mb-6">Featuring premium selections from top local brands. Experience the flavor of the holidays.</p>
+                            <p class="text-gray-400 mb-6">Featuring premium selections from top local brands. 21+ without medcard and 18+ with med card!</p>
                             
                             <div class="space-y-3">
                                 <div class="flex items-center justify-between p-3 bg-black/40 rounded border border-gray-800">
@@ -293,7 +396,7 @@
                 
                 <div class="flex flex-col md:flex-row justify-center items-stretch gap-8">
                     
-                    <!-- GA Ticket (Restored Original Design) -->
+                    <!-- GA Ticket -->
                     <div class="w-full md:w-1/2 bg-[#0a0a0a] rounded-3xl overflow-hidden border border-gray-800 hover:border-gray-600 transition-all duration-300 flex flex-col">
                         <div class="p-8 border-b border-gray-800">
                             <h3 class="text-3xl font-metal text-white tracking-wide">GENERAL</h3>
@@ -311,10 +414,10 @@
                                 <li class="flex items-center"><i class="fas fa-gift text-xmas-red mr-3"></i> Dirty Santa Eligible</li>
                             </ul>
                             
-                            <!-- Original Button Design Triggering Modal -->
-                            <button onclick="openPaymentModal()" class="w-full block bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-bold py-4 px-6 rounded-xl transition-all uppercase tracking-wider">
+                            <!-- GA Checkout Button (Direct Link) -->
+                            <a id="btn-ga" href="https://www.paypal.com/ncp/payment/JU9VTLJ9JQN24" target="_blank" class="w-full block bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-bold py-4 px-6 rounded-xl transition-all uppercase tracking-wider text-center">
                                 Purchase GA
-                            </button>
+                            </a>
                         </div>
                     </div>
 
@@ -341,10 +444,10 @@
                                 <li class="flex items-center"><i class="fas fa-star text-gold mr-3"></i> Priority Entry Line</li>
                             </ul>
                             
-                            <!-- Placeholder Button for VIP -->
-                            <button class="w-full block bg-gold hover:bg-yellow-400 text-black font-bold py-4 px-6 rounded-xl transition-all shadow-lg uppercase tracking-wider animate-pulse-slow">
+                            <!-- VIP Checkout Button (Direct Link) -->
+                            <a id="btn-vip" href="https://www.paypal.com/ncp/payment/4VXFY4MA8YY32" target="_blank" class="w-full block bg-gold hover:bg-yellow-400 text-black font-bold py-4 px-6 rounded-xl transition-all shadow-lg uppercase tracking-wider animate-pulse-slow text-center">
                                 Purchase VIP
-                            </button>
+                            </a>
                         </div>
                     </div>
 
@@ -354,31 +457,13 @@
         </div>
     </section>
 
-    <!-- Payment Modal (Hidden by Default) -->
-    <div id="payment-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/80">
-        <div class="bg-[#1a1a1a] border border-gray-700 p-8 rounded-2xl max-w-md w-full mx-4 relative shadow-[0_0_50px_rgba(0,0,0,0.8)]">
-            <!-- Close Button -->
-            <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
-                <i class="fas fa-times text-xl"></i>
-            </button>
-            
-            <h3 class="text-2xl font-metal text-white mb-2 text-center">Complete Transaction</h3>
-            <p class="text-gray-400 text-center mb-6 text-sm">You are purchasing <span class="text-white font-bold">1x General Admission</span> Ticket.</p>
-            
-            <!-- PayPal Button Container Renders Here -->
-            <div id="paypal-container-JU9VTLJ9JQN24" class="w-full"></div>
-            
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="bg-black py-12 border-t border-gray-900 text-center relative z-10">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-metal text-gray-800 mb-4">RESISTANCE JAM</h2>
             <div class="flex justify-center space-x-6 mb-8">
-                <a href="#" class="text-gray-500 hover:text-white transition-colors"><i class="fab fa-instagram text-2xl"></i></a>
-                <a href="#" class="text-gray-500 hover:text-white transition-colors"><i class="fab fa-facebook text-2xl"></i></a>
-                <a href="#" class="text-gray-500 hover:text-white transition-colors"><i class="fab fa-twitter text-2xl"></i></a>
+                <a href="https://www.instagram.com/anthon10999?igsh=MTRlNXpkeTMyY2hhaw==" target="_blank" class="text-gray-500 hover:text-white transition-colors"><i class="fab fa-instagram text-2xl"></i></a>
+                <a href="https://www.facebook.com/share/17hBpEd3Lx/" target="_blank" class="text-gray-500 hover:text-white transition-colors"><i class="fab fa-facebook text-2xl"></i></a>
             </div>
             <p class="text-gray-600 text-sm">© 2025 Ace's Entertainment Studios. All Rights Reserved.</p>
         </div>
@@ -386,42 +471,32 @@
 
     <!-- Scripts -->
     <script>
-        // --- Modal & PayPal Logic ---
-        let paypalRendered = false;
+        // --- Add To Calendar Logic (.ics) ---
+        function addToCalendar() {
+            // Event Details
+            const eventData = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'BEGIN:VEVENT',
+                'URL:' + window.location.href,
+                'DTSTART:20251212T193000', // 7:30 PM
+                'DTEND:20251212T235900',   // Midnight approx
+                'SUMMARY:Resistance Jam: Rock The Halls',
+                'DESCRIPTION:Doors open at 7:30pm and music at 8:00pm! Hosted by Ace the Poet. Located at The Boman Twin.',
+                'LOCATION:The Boman Twin Event Center, Tulsa, OK',
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ].join('\r\n');
 
-        function openPaymentModal() {
-            const modal = document.getElementById('payment-modal');
-            modal.classList.remove('hidden');
-            
-            // Render PayPal button only when modal opens and if not already rendered
-            if (!paypalRendered) {
-                if (window.paypal && window.paypal.HostedButtons) {
-                    try {
-                        window.paypal.HostedButtons({
-                            hostedButtonId: "JU9VTLJ9JQN24",
-                        }).render("#paypal-container-JU9VTLJ9JQN24")
-                        .then(() => {
-                            paypalRendered = true;
-                        })
-                        .catch((err) => {
-                            console.error("PayPal render error:", err);
-                            document.getElementById('paypal-container-JU9VTLJ9JQN24').innerHTML = 
-                                '<p class="text-red-500 text-center text-sm py-4">Secure payment window could not load in this preview.<br>Please open the site in a new tab or full window.</p>';
-                        });
-                    } catch (e) {
-                         console.error("PayPal initialization error:", e);
-                         document.getElementById('paypal-container-JU9VTLJ9JQN24').innerHTML = 
-                                '<p class="text-red-500 text-center text-sm py-4">Secure payment window could not load in this preview.</p>';
-                    }
-                } else {
-                    document.getElementById('paypal-container-JU9VTLJ9JQN24').innerHTML = 
-                        '<p class="text-red-500 text-center text-sm py-4">PayPal SDK failed to load. Please check your internet connection.</p>';
-                }
-            }
-        }
-
-        function closePaymentModal() {
-            document.getElementById('payment-modal').classList.add('hidden');
+            // Create blob and download
+            const blob = new Blob([eventData], { type: 'text/calendar;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'ResistanceJam_RockTheHalls.ics');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         // --- Snowfall Logic ---
@@ -471,25 +546,62 @@
         // Trigger once on load to show top elements
         setTimeout(revealOnScroll, 100);
 
-        // --- Countdown Timer ---
-        const targetDate = new Date("December 12, 2025 19:00:00").getTime();
-        const timerEl = document.getElementById('countdown');
+        // --- Countdown Timer & Ticket Portal Logic ---
+        // Deadline: December 11th, 2025 at 8pm
+        const targetDate = new Date("December 11, 2025 20:00:00").getTime();
+        const timerContainer = document.getElementById('countdown-timer');
+        const timerMsg = document.getElementById('timer-message');
 
-        if(timerEl) {
+        function closeTicketPortal() {
+            // Select buttons
+            const gaBtn = document.getElementById('btn-ga');
+            const vipBtn = document.getElementById('btn-vip');
+            const navBtn = document.getElementById('nav-tickets');
+
+            // Helper to replace button with closed message
+            const replaceButton = (btn) => {
+                if(btn) {
+                    const closedMsg = document.createElement('div');
+                    closedMsg.className = "w-full block bg-gray-800 border-2 border-gray-600 text-gray-400 font-bold py-4 px-6 rounded-xl uppercase tracking-wider text-center cursor-not-allowed";
+                    closedMsg.innerHTML = "Presales Closed";
+                    btn.parentNode.replaceChild(closedMsg, btn);
+                }
+            };
+
+            replaceButton(gaBtn);
+            replaceButton(vipBtn);
+            
+            // Update Nav Button
+            if(navBtn) {
+                navBtn.innerHTML = "TICKETS @ DOOR";
+                navBtn.href = "#details"; // Just scroll down, don't go to checkout
+                navBtn.classList.remove('bg-xmas-green', 'hover:bg-green-600');
+                navBtn.classList.add('bg-gray-600', 'cursor-default');
+            }
+        }
+
+        if(timerContainer) {
             const timerInterval = setInterval(() => {
                 const now = new Date().getTime();
                 const distance = targetDate - now;
 
                 if (distance < 0) {
                     clearInterval(timerInterval);
-                    timerEl.innerHTML = "THE RESISTANCE HAS BEGUN";
+                    timerContainer.classList.add('hidden');
+                    timerMsg.classList.remove('hidden');
+                    closeTicketPortal();
                     return;
                 }
 
                 const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
                 
-                timerEl.innerHTML = `${days} Days to Rock The Halls`;
+                document.getElementById('timer-days').innerText = String(days).padStart(2, '0');
+                document.getElementById('timer-hours').innerText = String(hours).padStart(2, '0');
+                document.getElementById('timer-minutes').innerText = String(minutes).padStart(2, '0');
+                document.getElementById('timer-seconds').innerText = String(seconds).padStart(2, '0');
             }, 1000);
         }
     </script>

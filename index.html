@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resistance Jam: Rock The Halls</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Metal Mania for headers, Roboto for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'xmas-red': '#D6001C',
+                        'xmas-green': '#00873E',
+                        'metal-black': '#0a0a0a',
+                        'gold': '#FFD700',
+                    },
+                    fontFamily: {
+                        'metal': ['"Metal Mania"', 'cursive'],
+                        'sans': ['"Roboto"', 'sans-serif'],
+                    },
+                    animation: {
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px #D6001C' },
+                            '100%': { boxShadow: '0 0 20px #00873E, 0 0 10px #D6001C' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #e5e5e5;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Snowflake Animation */
+        .snowflake {
+            position: fixed;
+            top: -20px;
+            color: white;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 50;
+            animation: fall linear forwards;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D6001C; 
+            border-radius: 4px;
+        }
+        
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .text-shadow-lg {
+            text-shadow: 4px 4px 0px #000000;
+        }
+
+        /* Reveal Animation Classes */
+        .reveal-hidden {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease-out;
+        }
+        .reveal-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="relative font-sans antialiased selection:bg-xmas-red selection:text-white">
+
+    <!-- Snow Container -->
+    <div id="snow-container"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-40 top-0 py-4 glass-panel border-b border-xmas-red/30 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
+            <div class="text-2xl font-metal text-xmas-red tracking-widest drop-shadow-md">RESISTANCE JAM</div>
+            <div class="flex items-center gap-6">
+                <a href="#details" class="text-sm font-bold hover:text-xmas-green transition-colors uppercase tracking-wider hidden md:block">The Resistance</a>
+                <a href="#tickets" class="bg-xmas-green hover:bg-green-600 text-white font-bold py-2 px-6 rounded shadow-[0_0_15px_rgba(0,135,62,0.6)] hover:shadow-[0_0_25px_rgba(0,135,62,0.8)] transition-all transform hover:-translate-y-1">
+                    GET TICKETS
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center bg-[url('https://images.unsplash.com/photo-1514525253440-b393452e2729?q=80&w=2669&auto=format&fit=crop')] bg-cover bg-center bg-no-repeat bg-fixed">
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-[#050505]"></div>
+        
+        <div class="text-center z-10 px-4 relative mt-16">
+            <h2 class="text-xl md:text-3xl text-xmas-green font-bold tracking-[0.3em] mb-4 uppercase animate-pulse-slow">Battle of the Bands</h2>
+            <h1 class="text-6xl md:text-8xl lg:text-9xl font-metal text-white mb-6 text-shadow-lg leading-tight transform hover:scale-105 transition-transform duration-500 cursor-default">
+                ROCK THE <span class="text-xmas-red inline-block relative">
+                    HALLS
+                    <!-- Santa Hat Decoration using SVG or simple CSS could go here, keeping it clean for now -->
+                </span>
+            </h1>
+            <p class="text-xl md:text-2xl font-light mb-10 italic text-gray-300">"Where the silent night meets the sonic resistance."</p>
+            
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                <div class="glass-panel px-8 py-4 rounded text-gold font-bold text-lg border-l-4 border-xmas-red">
+                    <i class="fas fa-calendar-alt mr-3"></i> DEC 12, 2025
+                </div>
+                <div class="glass-panel px-8 py-4 rounded text-gold font-bold text-lg border-r-4 border-xmas-green">
+                    <i class="fas fa-map-marker-alt mr-3"></i> TULSA, OK
+                </div>
+            </div>
+
+            <!-- Countdown Timer Placeholder -->
+            <div id="countdown" class="mt-8 font-metal text-2xl text-gray-400"></div>
+        </div>
+        
+        <!-- Animated Gradient Border at bottom -->
+        <div class="absolute bottom-0 w-full h-1 bg-gradient-to-r from-xmas-red via-gold to-xmas-green"></div>
+        
+        <!-- Scroll Down Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-gray-400">
+            <i class="fas fa-chevron-down text-2xl"></i>
+        </div>
+    </header>
+
+    <!-- The Resistance Insert (Event Details) -->
+    <section id="details" class="py-24 px-4 relative overflow-hidden">
+        <!-- Background accents -->
+        <div class="absolute top-20 left-0 w-96 h-96 bg-xmas-red rounded-full filter blur-[150px] opacity-10 pointer-events-none"></div>
+        <div class="absolute bottom-20 right-0 w-96 h-96 bg-xmas-green rounded-full filter blur-[150px] opacity-10 pointer-events-none"></div>
+
+        <div class="container mx-auto max-w-6xl relative z-10">
+            
+            <!-- Intro / Poetry Hook -->
+            <div class="text-center mb-20 scroll-reveal reveal-hidden">
+                <div class="inline-block p-2 border border-gray-700 rounded-full mb-4 px-6 text-xs font-bold text-gray-400 tracking-widest uppercase">Hosted By Anthony Kimble</div>
+                <h2 class="text-5xl md:text-6xl font-metal mb-8 text-white"><span class="text-xmas-red">The</span> Resistance</h2>
+                <div class="glass-panel p-8 md:p-12 rounded-2xl max-w-4xl mx-auto">
+                    <p class="text-lg md:text-xl text-gray-300 leading-relaxed font-light italic">
+                        "Between the chaos of the amps and the crash of the drums, we find clarity."
+                    </p>
+                    <hr class="border-gray-700 my-6 w-1/3 mx-auto">
+                    <p class="text-gray-400">
+                        While the bands reset, the Resistance begins. Experience soul-stirring <strong>Spoken Word Poetry</strong> transitions that bridge the gap between heavy riffs and holiday spirits.
+                    </p>
+                </div>
+            </div>
+
+            <!-- The Battle Grid -->
+            <div class="grid md:grid-cols-2 gap-8 mb-24">
+                <!-- Alt Rock Card -->
+                <div class="group relative glass-panel p-1 rounded-xl scroll-reveal reveal-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-xmas-red to-transparent opacity-20 rounded-xl group-hover:opacity-40 transition-opacity"></div>
+                    <div class="bg-black/80 h-full p-8 rounded-lg relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+                            <i class="fas fa-guitar text-9xl text-xmas-red"></i>
+                        </div>
+                        <h3 class="text-4xl font-metal text-xmas-red mb-2">Alt Rock</h3>
+                        <p class="text-sm uppercase tracking-widest text-gray-500 mb-6">Category One</p>
+                        <p class="mb-8 text-gray-300 text-lg">Atmospheric, melodic, and raw. Bands compete for the crown of the underground.</p>
+                        <div class="inline-block bg-xmas-red/20 border border-xmas-red text-xmas-red px-6 py-2 rounded font-bold text-xl">
+                            <i class="fas fa-trophy mr-2"></i> $150 Cash Prize
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Heavy Metal Card -->
+                <div class="group relative glass-panel p-1 rounded-xl scroll-reveal reveal-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-l from-xmas-green to-transparent opacity-20 rounded-xl group-hover:opacity-40 transition-opacity"></div>
+                    <div class="bg-black/80 h-full p-8 rounded-lg relative overflow-hidden text-right">
+                        <div class="absolute top-0 left-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity transform -scale-x-100">
+                            <i class="fas fa-bolt text-9xl text-xmas-green"></i>
+                        </div>
+                        <h3 class="text-4xl font-metal text-xmas-green mb-2">Heavy Metal</h3>
+                        <p class="text-sm uppercase tracking-widest text-gray-500 mb-6">Category Two</p>
+                        <p class="mb-8 text-gray-300 text-lg">Aggressive, technical, and loud. Only the heaviest riffs will survive the night.</p>
+                        <div class="inline-block bg-xmas-green/20 border border-xmas-green text-xmas-green px-6 py-2 rounded font-bold text-xl">
+                            $150 Cash Prize <i class="fas fa-trophy ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features (Dab Bar & Dirty Santa) -->
+            <div class="mb-24">
+                <h3 class="text-3xl font-metal text-center mb-12 text-white">Holiday Features</h3>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Dab Bar -->
+                    <div class="scroll-reveal reveal-hidden bg-gradient-to-br from-gray-800 to-black p-[1px] rounded-2xl">
+                        <div class="bg-neutral-900 h-full rounded-2xl p-8 relative overflow-hidden group hover:bg-neutral-800 transition-colors">
+                            <div class="flex items-start justify-between mb-6">
+                                <div class="bg-green-900/30 p-4 rounded-full text-xmas-green">
+                                    <i class="fas fa-cannabis text-3xl"></i>
+                                </div>
+                                <span class="bg-gray-800 text-xs font-bold px-3 py-1 rounded text-gray-400 uppercase">21+ Area</span>
+                            </div>
+                            <h4 class="text-2xl font-bold mb-3 text-white">Sponsored Dab Bar</h4>
+                            <p class="text-gray-400 mb-6">Featuring premium selections from top local brands. Experience the flavor of the holidays.</p>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-3 bg-black/40 rounded border border-gray-800">
+                                    <span class="font-bold text-gray-300">GA Ticket</span>
+                                    <span class="text-xmas-green font-bold">3x Hits Included</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-gold/10 rounded border border-gold/30">
+                                    <span class="font-bold text-gold">VIP Ticket</span>
+                                    <span class="text-gold font-bold">UNLIMITED ACCESS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dirty Santa -->
+                    <div class="scroll-reveal reveal-hidden bg-gradient-to-br from-gray-800 to-black p-[1px] rounded-2xl">
+                        <div class="bg-neutral-900 h-full rounded-2xl p-8 relative overflow-hidden group hover:bg-neutral-800 transition-colors">
+                            <div class="flex items-start justify-between mb-6">
+                                <div class="bg-red-900/30 p-4 rounded-full text-xmas-red">
+                                    <i class="fas fa-gifts text-3xl"></i>
+                                </div>
+                                <span class="bg-gray-800 text-xs font-bold px-3 py-1 rounded text-gray-400 uppercase">Community</span>
+                            </div>
+                            <h4 class="text-2xl font-bold mb-3 text-white">Dirty Santa Exchange</h4>
+                            <p class="text-gray-400 mb-6">Bring a wrapped gift to participate! Gifts grant you a discount at the door.</p>
+                            
+                            <div class="bg-gradient-to-r from-xmas-red/20 to-xmas-green/20 p-4 rounded border border-white/10 text-center">
+                                <div class="text-xl font-bold text-white mb-1">BRING A GIFT = 10% OFF</div>
+                                <div class="text-xs text-gray-400 mb-3">Discount applied to door price or refunded for presales</div>
+                                <div class="grid grid-cols-2 gap-4 text-sm">
+                                    <div class="bg-black/50 p-2 rounded">
+                                        <div class="text-gray-500">GA Refund</div>
+                                        <div class="font-bold text-white">$1.00 Back</div>
+                                    </div>
+                                    <div class="bg-black/50 p-2 rounded">
+                                        <div class="text-gray-500">VIP Refund</div>
+                                        <div class="font-bold text-gold">$2.00 Back</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ticketing Section -->
+            <div id="tickets" class="text-center max-w-5xl mx-auto scroll-reveal reveal-hidden">
+                <h2 class="text-4xl md:text-5xl font-metal mb-4">Secure Your <span class="text-xmas-red">Entry</span></h2>
+                <p class="text-gray-400 mb-12">Prices increase at the door. Lock in your presale rate now.</p>
+                
+                <div class="flex flex-col md:flex-row justify-center items-stretch gap-8">
+                    
+                    <!-- GA Ticket -->
+                    <div class="w-full md:w-1/2 bg-[#0a0a0a] rounded-3xl overflow-hidden border border-gray-800 hover:border-gray-600 transition-all duration-300 flex flex-col">
+                        <div class="p-8 border-b border-gray-800">
+                            <h3 class="text-3xl font-metal text-white tracking-wide">GENERAL</h3>
+                            <div class="mt-4 flex justify-center items-baseline text-white">
+                                <span class="text-5xl font-bold tracking-tight">$10</span>
+                                <span class="ml-2 text-xl text-gray-500">Presale</span>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2">$20 at the door</p>
+                        </div>
+                        <div class="p-8 flex-1 flex flex-col">
+                            <ul class="text-left space-y-4 mb-8 text-gray-300 flex-1">
+                                <li class="flex items-center"><i class="fas fa-check-circle text-gray-500 mr-3"></i> Full Event Entry</li>
+                                <li class="flex items-center"><i class="fas fa-music text-gray-500 mr-3"></i> Watch all 7 Bands</li>
+                                <li class="flex items-center"><i class="fas fa-leaf text-xmas-green mr-3"></i> <strong>3x Hits</strong> at Dab Bar</li>
+                                <li class="flex items-center"><i class="fas fa-gift text-xmas-red mr-3"></i> Dirty Santa Eligible</li>
+                            </ul>
+                            
+                            <button class="w-full block bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-bold py-4 px-6 rounded-xl transition-all uppercase tracking-wider">
+                                Purchase GA
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- VIP Ticket -->
+                    <div class="w-full md:w-1/2 bg-[#0a0a0a] rounded-3xl overflow-hidden border-2 border-gold relative shadow-[0_0_30px_rgba(255,215,0,0.15)] flex flex-col transform md:-translate-y-4">
+                        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-gold via-yellow-200 to-gold"></div>
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-gold text-black text-xs font-black px-2 py-1 rounded uppercase tracking-wider">Most Popular</span>
+                        </div>
+                        
+                        <div class="p-8 border-b border-gray-800 bg-gradient-to-b from-yellow-900/20 to-transparent">
+                            <h3 class="text-3xl font-metal text-gold tracking-wide">VIP ACCESS</h3>
+                            <div class="mt-4 flex justify-center items-baseline text-gold">
+                                <span class="text-5xl font-bold tracking-tight">$20</span>
+                                <span class="ml-2 text-xl text-yellow-600">Presale</span>
+                            </div>
+                            <p class="text-sm text-yellow-700/80 mt-2">$30 at the door</p>
+                        </div>
+                        <div class="p-8 flex-1 flex flex-col">
+                            <ul class="text-left space-y-4 mb-8 text-white flex-1">
+                                <li class="flex items-center"><i class="fas fa-crown text-gold mr-3"></i> <strong>VIP Lounge & Pool Room</strong></li>
+                                <li class="flex items-center"><i class="fas fa-infinity text-gold mr-3"></i> <strong>UNLIMITED Dab Bar</strong></li>
+                                <li class="flex items-center"><i class="fas fa-user-friends text-gold mr-3"></i> Hang with the Bands</li>
+                                <li class="flex items-center"><i class="fas fa-star text-gold mr-3"></i> Priority Entry Line</li>
+                            </ul>
+                            
+                            <button class="w-full block bg-gold hover:bg-yellow-400 text-black font-bold py-4 px-6 rounded-xl transition-all shadow-lg uppercase tracking-wider animate-pulse-slow">
+                                Purchase VIP
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black py-12 border-t border-gray-900 text-center relative z-10">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-metal text-gray-800 mb-4">RESISTANCE JAM</h2>
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#" class="text-gray-500 hover:text-white transition-colors"><i class="fab fa-instagram text-2xl"></i></a>
+                <a href="#" class="text-gray-500 hover:text-white transition-colors"><i class="fab fa-facebook text-2xl"></i></a>
+                <a href="#" class="text-gray-500 hover:text-white transition-colors"><i class="fab fa-twitter text-2xl"></i></a>
+            </div>
+            <p class="text-gray-600 text-sm">© 2025 Ace's Entertainment Studios. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // --- Snowfall Logic ---
+        const snowContainer = document.getElementById('snow-container');
+        
+        function createSnowflake() {
+            const flake = document.createElement('div');
+            flake.classList.add('snowflake');
+            flake.innerHTML = ['❄', '❅', '❆'][Math.floor(Math.random() * 3)];
+            
+            // Randomize position and animation
+            flake.style.left = Math.random() * 100 + 'vw';
+            const size = Math.random() * 10 + 10;
+            flake.style.fontSize = size + 'px';
+            flake.style.animationDuration = (Math.random() * 5 + 3) + 's';
+            flake.style.opacity = Math.random() * 0.7 + 0.3;
+            
+            snowContainer.appendChild(flake);
+
+            // Remove flake after animation ends to prevent memory leak
+            setTimeout(() => {
+                flake.remove();
+            }, 8000);
+        }
+
+        // Create snow frequently
+        setInterval(createSnowflake, 150);
+
+
+        // --- Scroll Reveal Animation Logic ---
+        const revealElements = document.querySelectorAll('.scroll-reveal');
+
+        const revealOnScroll = () => {
+            const triggerBottom = window.innerHeight * 0.85;
+
+            revealElements.forEach(el => {
+                const boxTop = el.getBoundingClientRect().top;
+
+                if(boxTop < triggerBottom) {
+                    el.classList.add('reveal-active');
+                    el.classList.remove('reveal-hidden');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        // Trigger once on load to show top elements
+        setTimeout(revealOnScroll, 100);
+
+        // --- Countdown Timer (Optional enhancement) ---
+        const targetDate = new Date("December 12, 2025 19:00:00").getTime();
+        const timerEl = document.getElementById('countdown');
+
+        if(timerEl) {
+            const timerInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance < 0) {
+                    clearInterval(timerInterval);
+                    timerEl.innerHTML = "THE RESISTANCE HAS BEGUN";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                
+                timerEl.innerHTML = `${days} Days to Rock The Halls`;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
